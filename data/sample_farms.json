@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "farmer_name": "Ahmed Ait Brahim",
+    "phone": "+212600000001",
+    "language": "darija",
+    "region": "Souss-Massa",
+    "parcel_name": "Citronnier Nord",
+    "lat": 30.4202,
+    "lon": -9.5982,
+    "area_hectares": 1.2,
+    "crop": "citrus",
+    "growth_stage": "fruit_development",
+    "satellite": {
+      "ndvi": 0.42,
+      "ndvi_7d_ago": 0.51,
+      "soil_moisture_pct": 21.5,
+      "surface_temp_c": 31.2,
+      "moisture_history_7d": [33, 31, 28, 26, 24, 22, 21.5]
+    },
+    "weather": {
+      "rain_prob_24h": 5,
+      "rain_prob_48h": 10,
+      "rain_prob_72h": 15,
+      "temp_min_c": 14,
+      "temp_max_c": 33,
+      "wind_kmh": 12,
+      "humidity_pct": 38,
+      "solar_radiation_mj": 24.5
+    }
+  },
+  {
+    "id": 2,
+    "farmer_name": "Fatima El Haddad",
+    "phone": "+212600000002",
+    "language": "darija",
+    "region": "Doukkala-Abda",
+    "parcel_name": "Hcal El Garbi",
+    "lat": 32.2333,
+    "lon": -8.5,
+    "area_hectares": 3.5,
+    "crop": "wheat",
+    "growth_stage": "heading",
+    "satellite": {
+      "ndvi": 0.58,
+      "ndvi_7d_ago": 0.56,
+      "soil_moisture_pct": 42.0,
+      "surface_temp_c": 24.8,
+      "moisture_history_7d": [38, 40, 41, 43, 45, 43, 42]
+    },
+    "weather": {
+      "rain_prob_24h": 70,
+      "rain_prob_48h": 85,
+      "rain_prob_72h": 60,
+      "temp_min_c": 11,
+      "temp_max_c": 22,
+      "wind_kmh": 18,
+      "humidity_pct": 72,
+      "solar_radiation_mj": 18.0
+    }
+  },
+  {
+    "id": 3,
+    "farmer_name": "Hassan Ou Moha",
+    "phone": "+212600000003",
+    "language": "darija",
+    "region": "Haouz",
+    "parcel_name": "Zitoun Tahtani",
+    "lat": 31.6295,
+    "lon": -7.9811,
+    "area_hectares": 2.8,
+    "crop": "olive",
+    "growth_stage": "flowering",
+    "satellite": {
+      "ndvi": 0.36,
+      "ndvi_7d_ago": 0.38,
+      "soil_moisture_pct": 18.2,
+      "surface_temp_c": 28.5,
+      "moisture_history_7d": [25, 24, 22, 21, 20, 19, 18.2]
+    },
+    "weather": {
+      "rain_prob_24h": 5,
+      "rain_prob_48h": 8,
+      "rain_prob_72h": 10,
+      "temp_min_c": 6,
+      "temp_max_c": 26,
+      "wind_kmh": 9,
+      "humidity_pct": 44,
+      "solar_radiation_mj": 22.0
+    }
+  }
+]
