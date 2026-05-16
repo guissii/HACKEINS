@@ -111,12 +111,38 @@ def _build_alerts(
     return alerts
 
 
-def decide(farm: dict[str, Any]) -> Decision:
-    satellite = farm["satellite"]
-    weather = farm["weather"]
+def decide(
+    farm: dict[str, Any],
+    overrides: dict[str, Any] | None = None,
+) -> Decision:
+    """Compute today's irrigation decision.
+
+    `overrides` is a {field: {text, num, ...}} dict from override_repo. Farmer
+    corrections temporarily replace satellite/weather values, EXCEPT for
+    safety-critical alerts (frost) which always fire from the raw weather.
+    """
+    overrides = overrides or {}
+    satellite = dict(farm["satellite"])  # shallow copy so we don't mutate the source
+    weather = dict(farm["weather"])
     crop = farm["crop"]
     stage = farm.get("growth_stage", "")
     area_ha = farm["area_hectares"]
+
+    # Apply overrides BEFORE the rule logic.
+    applied: list[str] = []
+    if "soil_moisture_pct" in overrides and overrides["soil_moisture_pct"].get("num") is not None:
+        satellite["soil_moisture_pct"] = float(overrides["soil_moisture_pct"]["num"])
+        applied.append("soil_moisture_pct")
+    if "rain_today" in overrides:
+        # Treat farmer-reported rain as if it already happened — drop 24h prob to 100% to force WAIT
+        weather["rain_prob_24h"] = 100.0
+        applied.append("rain_today")
+    if "crop" in overrides and overrides["crop"].get("text"):
+        crop = overrides["crop"]["text"]
+        applied.append("crop")
+    if "growth_stage" in overrides and overrides["growth_stage"].get("text"):
+        stage = overrides["growth_stage"]["text"]
+        applied.append("growth_stage")
 
     et0 = compute_et0(weather)
     kc = CROP_KC.get((crop, stage), 0.8)
@@ -143,7 +169,15 @@ def decide(farm: dict[str, Any]) -> Decision:
         # Drip irrigation typical flow: ~12 mm/hour applied depth
         minutes = max(10, int((crop_water_need_mm / 12.0) * 60))
 
-    alerts = _build_alerts(satellite, weather)
+    # Alerts use the RAW weather (not overridden) — frost warnings must fire
+    # even if the farmer says it won't freeze. Safety carve-out.
+    alerts = _build_alerts(satellite, farm["weather"])
+    if applied:
+        alerts.append(Alert(
+            type="farmer_override",
+            severity="low",
+            message=f"Decision adjusted from farmer report: {', '.join(applied)}",
+        ))
 
     facts = {
         "soil_moisture_pct": soil,
@@ -159,6 +193,7 @@ def decide(farm: dict[str, Any]) -> Decision:
         "temp_max_c": weather["temp_max_c"],
         "crop": crop,
         "growth_stage": stage,
+        "overrides_applied": applied,
     }
 
     return Decision(

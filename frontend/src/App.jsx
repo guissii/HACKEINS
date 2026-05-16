@@ -38,9 +38,19 @@ export default function App() {
     api.history(selectedId).then((r) => setHistory(r.data)).catch(() => {});
   }, [selectedId]);
 
+  // Re-run /analyze for the selected farm (e.g. after a farmer correction
+  // applied an override and we want the dashboard to reflect the new decision).
+  async function refreshAnalysis(id) {
+    try {
+      const r = await api.analyze(id);
+      setAnalyses((prev) => ({ ...prev, [id]: r.data }));
+    } catch {
+      /* silent */
+    }
+  }
+
   const selectedFarm = farms.find((f) => f.id === selectedId);
   const selectedAnalysis = analyses[selectedId];
-  const fullFarm = selectedAnalysis ? selectedAnalysis : null;
 
   return (
     <div className="h-screen flex flex-col bg-slate-50">
@@ -80,22 +90,18 @@ export default function App() {
           {selectedFarm && selectedAnalysis ? (
             <>
               <FarmHeader farm={selectedFarm} />
+              <OverrideBanner overrides={selectedAnalysis.overrides} />
               <DecisionWidget decision={selectedAnalysis.decision} />
               <AlertBanner alerts={selectedAnalysis.decision.alerts} />
               <KPICards decision={selectedAnalysis.decision} />
               <WaterSavings decision={selectedAnalysis.decision} farm={selectedFarm} />
-              <TrendChart
-                history={history}
-                fallbackHistory={
-                  // Pull moisture_history_7d from the underlying mock if available
-                  null
-                }
-              />
+              <TrendChart history={history} fallbackHistory={null} />
               <WhatsAppPanel
                 farmId={selectedFarm.id}
                 farmer={selectedFarm.farmer_name}
                 dailyMessage={selectedAnalysis.ai?.darija_message}
                 aiSource={selectedAnalysis.ai?._source}
+                onOverrideApplied={() => refreshAnalysis(selectedFarm.id)}
               />
             </>
           ) : (
@@ -185,6 +191,34 @@ function FarmList({ farms, analyses, selectedId, onSelect }) {
           </button>
         );
       })}
+    </div>
+  );
+}
+
+function OverrideBanner({ overrides }) {
+  const entries = Object.entries(overrides || {});
+  if (entries.length === 0) return null;
+  return (
+    <div className="rounded-xl border border-sky-300 bg-sky-50 px-4 py-3 flex items-start gap-3">
+      <span className="text-xl">🧑‍🌾</span>
+      <div className="flex-1">
+        <div className="text-xs uppercase tracking-wide text-sky-700 font-semibold">
+          Farmer overrides active
+        </div>
+        <ul className="mt-1 text-sm text-sky-900 space-y-0.5">
+          {entries.map(([field, info]) => (
+            <li key={field}>
+              <span className="font-mono text-xs bg-sky-100 px-1.5 py-0.5 rounded">
+                {field}
+              </span>{" "}
+              <span className="font-medium">→ {info.text}</span>
+              <span className="text-xs text-sky-600 ml-2">
+                {info.hours_left}h left
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }

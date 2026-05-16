@@ -22,4 +22,9 @@ export const api = {
   analyze: (id) => get(`/farms/${id}/analyze`),
   history: (id) => get(`/farms/${id}/history`),
   ask: (id, question) => post(`/farms/${id}/ask`, { question }),
+  // Human-in-the-loop:
+  correction: (id, text) => post(`/farms/${id}/correction`, { text }),
+  feedback: (id, vote, messageExcerpt) =>
+    post(`/farms/${id}/feedback`, { vote, message_excerpt: messageExcerpt }),
+  overrides: (id) => get(`/farms/${id}/overrides`),
 };

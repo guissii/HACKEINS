@@ -1,7 +1,13 @@
 import { useState } from "react";
 import { api } from "../api";
 
-export default function WhatsAppPanel({ farmId, farmer, dailyMessage, aiSource }) {
+export default function WhatsAppPanel({
+  farmId,
+  farmer,
+  dailyMessage,
+  aiSource,
+  onOverrideApplied,
+}) {
   const [messages, setMessages] = useState([]);
   const [question, setQuestion] = useState("");
   const [loading, setLoading] = useState(false);
@@ -14,15 +20,56 @@ export default function WhatsAppPanel({ farmId, farmer, dailyMessage, aiSource }
     setMessages((m) => [...m, { role: "user", text: q }]);
     setLoading(true);
     try {
-      const r = await api.ask(farmId, q);
-      setMessages((m) => [...m, { role: "assistant", text: r.data.reply }]);
+      // Route through /correction — it auto-detects whether the message is
+      // a question, a correction, or an observation, and acts accordingly.
+      const r = await api.correction(farmId, q);
+      const d = r.data;
+
+      if (d.kind === "qa") {
+        // Pure question: existing Q&A reply
+        setMessages((m) => [
+          ...m,
+          { role: "assistant", text: d.reply, kind: "qa" },
+        ]);
+      } else if (d.kind === "override_applied") {
+        // Farmer corrected something → re-rendered decision message
+        setMessages((m) => [
+          ...m,
+          {
+            role: "system",
+            text: `✓ Updated: ${d.applied_field} (decision: ${d.decision.action})`,
+            kind: "system",
+          },
+          { role: "assistant", text: d.ai.darija_message, kind: "decision" },
+        ]);
+        // Let the parent refresh KPIs, decision widget, etc.
+        onOverrideApplied && onOverrideApplied();
+      } else {
+        // Logged but no actionable field
+        setMessages((m) => [
+          ...m,
+          { role: "assistant", text: d.ai?.darija_message || "شكراً على التعليق ديالك!", kind: "ack" },
+        ]);
+      }
     } catch (err) {
       setMessages((m) => [
         ...m,
-        { role: "assistant", text: "⚠️ خطأ في الاتصال، عاود من بعد." },
+        { role: "assistant", text: "⚠️ خطأ في الاتصال، عاود من بعد.", kind: "error" },
       ]);
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function vote(messageIndex, dir) {
+    const target = messages[messageIndex];
+    try {
+      await api.feedback(farmId, dir, (target?.text || "").slice(0, 200));
+      setMessages((m) =>
+        m.map((msg, i) => (i === messageIndex ? { ...msg, voted: dir } : msg))
+      );
+    } catch {
+      /* silent */
     }
   }
 
@@ -47,34 +94,46 @@ export default function WhatsAppPanel({ farmId, farmer, dailyMessage, aiSource }
       {/* Chat body */}
       <div
         className="bg-[#ECE5DD] p-3 flex-1 overflow-y-auto space-y-2"
-        style={{ minHeight: "260px", maxHeight: "360px" }}
+        style={{ minHeight: "260px", maxHeight: "420px" }}
       >
         {dailyMessage && (
-          <Bubble role="assistant">
-            <div className="arabic whitespace-pre-wrap">{dailyMessage}</div>
-          </Bubble>
+          <BubbleWithVote
+            role="assistant"
+            text={dailyMessage}
+            onVote={(d) => vote(-1, d)}
+            voted={null}
+            isDaily
+          />
         )}
-        {messages.map((m, i) => (
-          <Bubble key={i} role={m.role}>
-            <div
-              className={isArabic(m.text) ? "arabic whitespace-pre-wrap" : "whitespace-pre-wrap"}
-            >
-              {m.text}
-            </div>
-          </Bubble>
-        ))}
+        {messages.map((m, i) => {
+          if (m.role === "system") {
+            return (
+              <div key={i} className="flex justify-center">
+                <div className="text-xs px-3 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+                  {m.text}
+                </div>
+              </div>
+            );
+          }
+          return (
+            <BubbleWithVote
+              key={i}
+              role={m.role}
+              text={m.text}
+              onVote={m.role === "assistant" ? (d) => vote(i, d) : null}
+              voted={m.voted}
+            />
+          );
+        })}
         {loading && (
           <Bubble role="assistant">
-            <span className="opacity-60">typing…</span>
+            <TypingDots />
           </Bubble>
         )}
       </div>
 
       {/* Input */}
       <form onSubmit={send} className="bg-white border-t border-slate-200 p-2 flex items-center gap-2">
-        {/* Roadmap-only icons: visually preview multimodal capability.
-            Gemini already supports voice + image natively; we chose text
-            for the demo. Clicking them shows a "coming soon" hint. */}
         <RoadmapIcon
           label="Attach a photo of your plant for AI diagnosis (coming soon)"
           icon={
@@ -96,7 +155,7 @@ export default function WhatsAppPanel({ farmId, farmer, dailyMessage, aiSource }
         />
         <input
           className="flex-1 rounded-full border border-slate-300 px-4 py-2 text-sm focus:outline-none focus:border-filaha-green"
-          placeholder="Ask in Darija, French, or Arabic…"
+          placeholder="Ask, or correct the AI (Darija/French/Arabic)…"
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
         />
@@ -123,6 +182,62 @@ function Bubble({ role, children }) {
       >
         {children}
       </div>
+    </div>
+  );
+}
+
+function BubbleWithVote({ role, text, onVote, voted, isDaily }) {
+  const isUser = role === "user";
+  return (
+    <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
+      <div className={`max-w-[85%] ${isUser ? "" : "group"}`}>
+        <div
+          className={`rounded-2xl px-3 py-2 text-sm shadow-sm ${
+            isUser ? "bg-[#DCF8C6] text-slate-900" : "bg-white text-slate-900"
+          }`}
+        >
+          <div className={isArabic(text) ? "arabic whitespace-pre-wrap" : "whitespace-pre-wrap"}>
+            {text}
+          </div>
+        </div>
+        {!isUser && onVote && (
+          <div className="flex gap-1 mt-1 px-1 opacity-0 group-hover:opacity-100 transition">
+            <VoteButton dir="up" active={voted === "up"} onClick={() => onVote("up")} />
+            <VoteButton dir="down" active={voted === "down"} onClick={() => onVote("down")} />
+            {isDaily && <span className="text-[10px] text-slate-400 ml-1">help us learn</span>}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function VoteButton({ dir, active, onClick }) {
+  const isUp = dir === "up";
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      title={isUp ? "Helpful" : "Not helpful"}
+      className={`text-xs px-1.5 py-0.5 rounded transition ${
+        active
+          ? isUp
+            ? "bg-green-100 text-green-700"
+            : "bg-red-100 text-red-700"
+          : "text-slate-400 hover:bg-slate-100"
+      }`}
+    >
+      {isUp ? "👍" : "👎"}
+    </button>
+  );
+}
+
+function TypingDots() {
+  return (
+    <div className="flex gap-1 py-1">
+      <span className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: "0ms" }} />
+      <span className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: "150ms" }} />
+      <span className="w-1.5 h-1.5 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: "300ms" }} />
     </div>
   );
 }
