@@ -17,6 +17,20 @@
     direction: rtl;
     text-align: right;
   }
+  /* When the page is in RTL mode, use Arabic font everywhere by default. */
+  html[dir="rtl"] body {
+    font-family: "Noto Sans Arabic", "Inter", system-ui, sans-serif;
+  }
+  /* Leaflet popups must stay LTR even on an RTL page (URLs, coords) */
+  html[dir="rtl"] .leaflet-container,
+  html[dir="rtl"] .leaflet-popup-content {
+    direction: ltr;
+    text-align: left;
+  }
+  /* Recharts SVG numbers also stay LTR */
+  html[dir="rtl"] .recharts-wrapper {
+    direction: ltr;
+  }
 }
 
 /* Leaflet custom marker tweaks */

@@ -1,14 +1,14 @@
 import {
   LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  CartesianGrid, Legend,
+  CartesianGrid,
 } from "recharts";
+import { useI18n } from "../i18n";
 
 export default function TrendChart({ history, fallbackHistory }) {
+  const { t } = useI18n();
   // Backend gives newest-first; reverse for chronological chart.
   let rows = (history || []).slice().reverse();
 
-  // If only one persisted reading, synthesize the 7-day moisture series
-  // from the farm's current snapshot so the chart isn't a single dot.
   if (rows.length <= 1 && fallbackHistory?.length) {
     const today = new Date();
     rows = fallbackHistory.map((m, i) => {
@@ -27,9 +27,9 @@ export default function TrendChart({ history, fallbackHistory }) {
     <div className="rounded-xl border border-slate-200 bg-white p-4">
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-sm font-semibold text-slate-700">
-          Soil moisture trend (last 7 days)
+          {t("trend.title")}
         </h3>
-        <span className="text-xs text-slate-400">% saturation</span>
+        <span className="text-xs text-slate-400">{t("trend.unit")}</span>
       </div>
       <div className="h-48">
         <ResponsiveContainer width="100%" height="100%">

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { api } from "../api";
+import { useI18n } from "../i18n";
 
 export default function WhatsAppPanel({
   farmId,
@@ -8,6 +9,7 @@ export default function WhatsAppPanel({
   aiSource,
   onOverrideApplied,
 }) {
+  const { t } = useI18n();
   const [messages, setMessages] = useState([]);
   const [question, setQuestion] = useState("");
   const [loading, setLoading] = useState(false);
@@ -26,23 +28,20 @@ export default function WhatsAppPanel({
       const d = r.data;
 
       if (d.kind === "qa") {
-        // Pure question: existing Q&A reply
         setMessages((m) => [
           ...m,
           { role: "assistant", text: d.reply, kind: "qa" },
         ]);
       } else if (d.kind === "override_applied") {
-        // Farmer corrected something → re-rendered decision message
         setMessages((m) => [
           ...m,
           {
             role: "system",
-            text: `✓ Updated: ${d.applied_field} (decision: ${d.decision.action})`,
+            text: `✓ ${t("wa.updated")}: ${d.applied_field} (${t(`decision.${d.decision.action}`)})`,
             kind: "system",
           },
           { role: "assistant", text: d.ai.darija_message, kind: "decision" },
         ]);
-        // Let the parent refresh KPIs, decision widget, etc.
         onOverrideApplied && onOverrideApplied();
       } else {
         // Logged but no actionable field
@@ -75,19 +74,19 @@ export default function WhatsAppPanel({
 
   return (
     <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden flex flex-col">
-      {/* WhatsApp-style header */}
-      <div className="bg-[#075E54] text-white px-4 py-3 flex items-center gap-3">
+      {/* WhatsApp-style header — stays LTR for WhatsApp-look authenticity */}
+      <div className="bg-[#075E54] text-white px-4 py-3 flex items-center gap-3" dir="ltr">
         <div className="w-9 h-9 rounded-full bg-filaha-green flex items-center justify-center text-white text-lg">
           🌿
         </div>
         <div>
-          <div className="font-semibold text-sm">Filaha AI</div>
+          <div className="font-semibold text-sm">{t("app.name")}</div>
           <div className="text-xs opacity-80">
-            {farmer ? `→ ${farmer}` : "online"}
+            {farmer ? `→ ${farmer}` : t("wa.subtitle_online")}
           </div>
         </div>
         <span className="ml-auto text-xs bg-white/20 px-2 py-0.5 rounded">
-          {aiSource === "gemini" ? "Gemini live" : "Demo mode"}
+          {aiSource === "gemini" ? t("wa.source_live") : t("wa.source_demo")}
         </span>
       </div>
 
@@ -135,7 +134,7 @@ export default function WhatsAppPanel({
       {/* Input */}
       <form onSubmit={send} className="bg-white border-t border-slate-200 p-2 flex items-center gap-2">
         <RoadmapIcon
-          label="Attach a photo of your plant for AI diagnosis (coming soon)"
+          label={t("wa.attach_label")}
           icon={
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
               <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" />
@@ -143,7 +142,7 @@ export default function WhatsAppPanel({
           }
         />
         <RoadmapIcon
-          label="Send a voice note in Darija (coming soon — for illiterate farmers)"
+          label={t("wa.voice_label")}
           icon={
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
               <rect x="9" y="2" width="6" height="12" rx="3" />
@@ -155,7 +154,7 @@ export default function WhatsAppPanel({
         />
         <input
           className="flex-1 rounded-full border border-slate-300 px-4 py-2 text-sm focus:outline-none focus:border-filaha-green"
-          placeholder="Ask, or correct the AI (Darija/French/Arabic)…"
+          placeholder={t("wa.placeholder")}
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
         />
@@ -164,7 +163,7 @@ export default function WhatsAppPanel({
           disabled={loading || !question.trim()}
           className="bg-filaha-green text-white text-sm font-medium px-4 py-2 rounded-full disabled:opacity-40"
         >
-          Send
+          {t("wa.send")}
         </button>
       </form>
     </div>
@@ -187,6 +186,7 @@ function Bubble({ role, children }) {
 }
 
 function BubbleWithVote({ role, text, onVote, voted, isDaily }) {
+  const { t } = useI18n();
   const isUser = role === "user";
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
@@ -195,6 +195,7 @@ function BubbleWithVote({ role, text, onVote, voted, isDaily }) {
           className={`rounded-2xl px-3 py-2 text-sm shadow-sm ${
             isUser ? "bg-[#DCF8C6] text-slate-900" : "bg-white text-slate-900"
           }`}
+          dir={isArabic(text) ? "rtl" : "ltr"}
         >
           <div className={isArabic(text) ? "arabic whitespace-pre-wrap" : "whitespace-pre-wrap"}>
             {text}
@@ -204,7 +205,7 @@ function BubbleWithVote({ role, text, onVote, voted, isDaily }) {
           <div className="flex gap-1 mt-1 px-1 opacity-0 group-hover:opacity-100 transition">
             <VoteButton dir="up" active={voted === "up"} onClick={() => onVote("up")} />
             <VoteButton dir="down" active={voted === "down"} onClick={() => onVote("down")} />
-            {isDaily && <span className="text-[10px] text-slate-400 ml-1">help us learn</span>}
+            {isDaily && <span className="text-[10px] text-slate-400 ms-1">{t("wa.help_learn")}</span>}
           </div>
         )}
       </div>

@@ -1,8 +1,11 @@
+import { useI18n } from "../i18n";
+
 const ICON = {
   frost: "🥶",
   drought_stress: "🏜️",
   crop_stress: "🌱",
   heavy_rain: "🌧️",
+  farmer_override: "🧑‍🌾",
 };
 
 const SEVERITY_COLOR = {
@@ -12,6 +15,7 @@ const SEVERITY_COLOR = {
 };
 
 export default function AlertBanner({ alerts }) {
+  const { t } = useI18n();
   if (!alerts || alerts.length === 0) return null;
   return (
     <div className="space-y-2">
@@ -23,7 +27,7 @@ export default function AlertBanner({ alerts }) {
           <span className="text-xl leading-none">{ICON[a.type] || "⚠️"}</span>
           <div className="flex-1">
             <div className="font-semibold capitalize">
-              {a.type.replace("_", " ")}
+              {t(`alert.${a.type}`) === `alert.${a.type}` ? a.type.replace("_", " ") : t(`alert.${a.type}`)}
             </div>
             <div className="text-xs opacity-90">{a.message}</div>
           </div>
