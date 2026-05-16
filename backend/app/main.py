@@ -74,6 +74,16 @@ async def get_farm(farm_id: int):
     return {"status": "ok", "data": farm}
 
 
+@app.get("/api/farms/{farm_id}/weather-debug")
+async def weather_debug(farm_id: int):
+    """Inspect the raw weather response (mock or live)."""
+    farm = data_source.get_farm(farm_id)
+    if not farm:
+        raise HTTPException(404, "Farm not found")
+    weather = await data_source.fetch_weather(farm)
+    return {"status": "ok", "data": weather}
+
+
 @app.get("/api/farms/{farm_id}/analyze")
 async def analyze_farm(
     farm_id: int, session: AsyncSession = Depends(get_session),

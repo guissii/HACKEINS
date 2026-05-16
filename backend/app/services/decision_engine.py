@@ -124,11 +124,13 @@ def decide(farm: dict[str, Any]) -> Decision:
 
     threshold = CROP_MOISTURE_THRESHOLD.get(crop, 30.0)
     soil = satellite["soil_moisture_pct"]
-    rain_48h = weather["rain_prob_48h"]
+    # Wait if heavy rain in EITHER the next 24h or 48h — covers both
+    # imminent and incoming storms.
+    rain_near = max(weather["rain_prob_24h"], weather["rain_prob_48h"])
 
     if soil >= threshold:
         action = "SKIP"
-    elif rain_48h >= RAIN_SKIP_THRESHOLD_PCT:
+    elif rain_near >= RAIN_SKIP_THRESHOLD_PCT:
         action = "WAIT"
     else:
         action = "IRRIGATE"
@@ -152,7 +154,7 @@ def decide(farm: dict[str, Any]) -> Decision:
         "kc": kc,
         "crop_water_need_mm": round(crop_water_need_mm, 2),
         "rain_prob_24h": weather["rain_prob_24h"],
-        "rain_prob_48h": rain_48h,
+        "rain_prob_48h": weather["rain_prob_48h"],
         "temp_min_c": weather["temp_min_c"],
         "temp_max_c": weather["temp_max_c"],
         "crop": crop,

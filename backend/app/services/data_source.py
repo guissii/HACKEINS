@@ -5,10 +5,14 @@ Behind a single interface so swapping mock → real is a config flip.
 from __future__ import annotations
 
 import json
+import logging
 from pathlib import Path
 from typing import Any
 
 from app.config import settings
+from app.services import weather_live
+
+logger = logging.getLogger(__name__)
 
 DATA_FILE = Path(__file__).resolve().parents[3] / "data" / "sample_farms.json"
 
@@ -33,6 +37,11 @@ async def fetch_satellite(farm: dict[str, Any]) -> dict[str, Any]:
 
 
 async def fetch_weather(farm: dict[str, Any]) -> dict[str, Any]:
+    """Live Open-Meteo for the farm's GPS — falls back to mock on failure."""
     if settings.use_mock_weather:
         return farm["weather"]
-    raise NotImplementedError("Real Open-Meteo fetch not wired yet")
+    try:
+        return await weather_live.fetch_weather(farm["lat"], farm["lon"])
+    except Exception as e:
+        logger.warning("Open-Meteo failed for farm %s: %s — using mock", farm["id"], e)
+        return farm["weather"]

@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body, #root {
+    height: 100%;
+    margin: 0;
+  }
+  body {
+    font-family: "Inter", system-ui, sans-serif;
+    background: #f8fafc;
+    color: #0f172a;
+  }
+  .arabic {
+    font-family: "Noto Sans Arabic", "Inter", sans-serif;
+    direction: rtl;
+    text-align: right;
+  }
+}
+
+/* Leaflet custom marker tweaks */
+.leaflet-container {
+  font-family: "Inter", system-ui, sans-serif;
+  border-radius: 0.75rem;
+}
+.leaflet-popup-content-wrapper {
+  border-radius: 0.5rem;
+}
