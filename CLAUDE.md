@@ -1,4 +1,4 @@
-# Filaha AI — Project Context
+# ZiraIA — Project Context
 
 ## What this is
 AI-powered irrigation intelligence for Moroccan farmers. Free satellite + weather data → decision engine → Gemini explains in Darija → WhatsApp/Dashboard.

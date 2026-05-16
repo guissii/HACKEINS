@@ -76,7 +76,7 @@ export default function WhatsAppPanel({
     <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden flex flex-col">
       {/* WhatsApp-style header — stays LTR for WhatsApp-look authenticity */}
       <div className="bg-[#075E54] text-white px-4 py-3 flex items-center gap-3" dir="ltr">
-        <div className="w-9 h-9 rounded-full bg-filaha-green flex items-center justify-center text-white text-lg">
+        <div className="w-9 h-9 rounded-full bg-ziraia-green flex items-center justify-center text-white text-lg">
           🌿
         </div>
         <div>
@@ -153,7 +153,7 @@ export default function WhatsAppPanel({
           }
         />
         <input
-          className="flex-1 rounded-full border border-slate-300 px-4 py-2 text-sm focus:outline-none focus:border-filaha-green"
+          className="flex-1 rounded-full border border-slate-300 px-4 py-2 text-sm focus:outline-none focus:border-ziraia-green"
           placeholder={t("wa.placeholder")}
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
@@ -161,7 +161,7 @@ export default function WhatsAppPanel({
         <button
           type="submit"
           disabled={loading || !question.trim()}
-          className="bg-filaha-green text-white text-sm font-medium px-4 py-2 rounded-full disabled:opacity-40"
+          className="bg-ziraia-green text-white text-sm font-medium px-4 py-2 rounded-full disabled:opacity-40"
         >
           {t("wa.send")}
         </button>
@@ -255,7 +255,7 @@ function RoadmapIcon({ label, icon }) {
       onClick={() =>
         alert(`${label}\n\nThis preview hints at our v2 multimodal stack — Gemini already supports voice and image input natively.`)
       }
-      className="text-slate-400 hover:text-filaha-green transition p-1.5 rounded-full hover:bg-slate-100"
+      className="text-slate-400 hover:text-ziraia-green transition p-1.5 rounded-full hover:bg-slate-100"
     >
       {icon}
     </button>

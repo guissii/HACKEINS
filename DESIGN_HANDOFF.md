@@ -1,4 +1,4 @@
-# Filaha AI — Frontend & Design Handoff
+# ZiraIA — Frontend & Design Handoff
 
 > **You are joining a hackathon project mid-flight.** Backend + AI integration are done. Your job is to make the dashboard and WhatsApp experience look and feel polished. Read this whole document before you touch anything.
 
@@ -6,7 +6,7 @@
 
 ## 1. The 60-second project pitch
 
-**Filaha AI** is an AI-powered irrigation intelligence platform for Moroccan farmers. It uses free satellite + weather data to answer one daily question per farm:
+**ZiraIA** is an AI-powered irrigation intelligence platform for Moroccan farmers. It uses free satellite + weather data to answer one daily question per farm:
 
 > _"Should I irrigate today, how much, and when?"_
 
@@ -142,12 +142,12 @@ frontend/src/
     └── WhatsAppPanel.jsx         ← Phone-style chat with live Q&A
 ```
 
-Tailwind theme has custom Filaha colors in `tailwind.config.js`:
-- `filaha-green` (#2d8a4f) — primary brand
-- `filaha-earth` (#a87d4a) — secondary
-- `filaha-dry` (#dc2626) — IRRIGATE state
-- `filaha-wet` (#0284c7) — water / moisture
-- `filaha-wait` (#f59e0b) — WAIT state
+Tailwind theme has custom ZiraIA colors in `tailwind.config.js`:
+- `ziraia-green` (#2d8a4f) — primary brand
+- `ziraia-earth` (#a87d4a) — secondary
+- `ziraia-dry` (#dc2626) — IRRIGATE state
+- `ziraia-wet` (#0284c7) — water / moisture
+- `ziraia-wait` (#f59e0b) — WAIT state
 
 ---
 
@@ -178,7 +178,7 @@ Tailwind theme has custom Filaha colors in `tailwind.config.js`:
 4. Type a question in the input → live Gemini answers in Darija → judges' jaws drop
 
 What it currently does:
-- WhatsApp-green header with "Filaha AI" branding
+- WhatsApp-green header with "ZiraIA" branding
 - Cream chat background (#ECE5DD — actual WhatsApp color)
 - Daily Darija message rendered in RTL with the `arabic` CSS class
 - User questions → green bubbles on the right
@@ -217,7 +217,7 @@ Listed in priority order. Pick ones you have time for; don't aim to do all.
 
 ### Polish (do these last)
 10. **Custom favicon** — `frontend/index.html` references `/leaf.svg` but the file doesn't exist yet. Create it.
-11. **Loading screen** — show a Filaha leaf logo while the initial data loads
+11. **Loading screen** — show a ZiraIA leaf logo while the initial data loads
 12. **Subtle background pattern** — VERY subtle zellige-inspired pattern in the body bg (5% opacity, easy to overdo)
 13. **Footer** — "Made with ❤️ for Moroccan farmers · Hack AI 2026"
 14. **Page title / meta tags** — make sure browser tab and OG share image are branded
@@ -235,7 +235,7 @@ Listed in priority order. Pick ones you have time for; don't aim to do all.
 If you're using an AI assistant to help you, paste this at the start of your conversation:
 
 ```
-I'm working on a hackathon project called Filaha AI — an AI-powered irrigation
+I'm working on a hackathon project called ZiraIA — an AI-powered irrigation
 platform for Moroccan farmers. The backend is built (FastAPI + Gemini + 
 Open-Meteo). I'm focused on the frontend dashboard and a WhatsApp-style chat
 panel.
@@ -256,10 +256,10 @@ farmer's phone in their dialect."
 
 Design feel: warm, earthy, trustworthy — like a village agronomist with a 
 tablet. NOT corporate SaaS. Brand colors:
-- filaha-green #2d8a4f (primary)
-- filaha-dry #dc2626 (irrigate state)
-- filaha-wait #f59e0b (wait state)
-- filaha-wet #0284c7 (water/moisture)
+- ziraia-green #2d8a4f (primary)
+- ziraia-dry #dc2626 (irrigate state)
+- ziraia-wait #f59e0b (wait state)
+- ziraia-wet #0284c7 (water/moisture)
 
 API contract — the frontend calls these endpoints:
 - GET /api/farms → list of farms
@@ -280,7 +280,7 @@ My specific task right now is: [WRITE WHAT YOU'RE WORKING ON]
 - **Open a PR into `adam` branch**, don't push directly to it. He'll review and merge.
 - **Don't change backend code** without explicit approval. The decision engine and AI prompts are tuned and tested.
 - **Don't change the API contract** — if you need new data, ask. He can add an endpoint in 5 minutes.
-- **Don't commit** `.env`, `node_modules`, `filaha.db`, or `.venv/`. They're gitignored, but double-check before pushing.
+- **Don't commit** `.env`, `node_modules`, `ziraia.db`, or `.venv/`. They're gitignored, but double-check before pushing.
 - **Commit messages**: `feat:`, `style:`, `fix:`, `polish:` prefix — short, in present tense.
 - **Test the demo flow** before pushing: open http://localhost:5173, click each of the 3 farms, send a Darija question in the WhatsApp panel, confirm nothing visually breaks.
 - **Questions**: ping Adam directly. Don't guess on UX direction — better to ask for 30 seconds than rebuild for 30 minutes.

@@ -15,7 +15,7 @@ from app.services.decision_engine import Decision
 
 logger = logging.getLogger(__name__)
 
-_SYSTEM_PROMPT = """You are Filaha AI, answering a Moroccan farmer's question on WhatsApp.
+_SYSTEM_PROMPT = """You are ZiraIA, answering a Moroccan farmer's question on WhatsApp.
 
 You will receive:
 - The farm's current state (soil moisture, NDVI, weather, crop, stage)

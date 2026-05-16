@@ -1,4 +1,4 @@
-# Filaha AI
+# ZiraIA
 
 > AI-powered irrigation intelligence for Moroccan farmers.
 > Free satellite + weather data → deterministic decision engine → Gemini explains it in Darija → reaches the farmer on WhatsApp or a cooperative dashboard.
@@ -19,7 +19,7 @@ Existing precision-agriculture tools require IoT sensors, paid satellite license
 
 ## The solution
 
-Filaha AI answers one question per farm, every day:
+ZiraIA answers one question per farm, every day:
 
 > _Should I irrigate today, how much, and when?_
 

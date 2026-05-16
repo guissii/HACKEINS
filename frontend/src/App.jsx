@@ -112,7 +112,7 @@ function Header() {
   const { t, lang, setLang } = useI18n();
   return (
     <header className="bg-white border-b border-slate-200 px-6 py-3 flex items-center gap-3">
-      <div className="w-9 h-9 rounded-lg bg-filaha-green text-white flex items-center justify-center text-xl">
+      <div className="w-9 h-9 rounded-lg bg-ziraia-green text-white flex items-center justify-center text-xl">
         🌿
       </div>
       <div>
@@ -123,7 +123,7 @@ function Header() {
         <span className="text-xs text-slate-500 hidden sm:inline">{t("app.event")}</span>
         <button
           onClick={() => setLang(lang === "ar" ? "en" : "ar")}
-          className="text-xs px-3 py-1.5 rounded-full border border-slate-300 hover:border-filaha-green hover:bg-filaha-green hover:text-white transition font-medium"
+          className="text-xs px-3 py-1.5 rounded-full border border-slate-300 hover:border-ziraia-green hover:bg-ziraia-green hover:text-white transition font-medium"
         >
           {t("lang.toggle")}
         </button>
@@ -165,7 +165,7 @@ function FarmList({ farms, analyses, selectedId, onSelect }) {
             onClick={() => onSelect(f.id)}
             className={`text-start rounded-xl border p-3 transition ${
               isSelected
-                ? "border-filaha-green bg-white shadow-sm"
+                ? "border-ziraia-green bg-white shadow-sm"
                 : "border-slate-200 bg-white hover:border-slate-300"
             }`}
           >

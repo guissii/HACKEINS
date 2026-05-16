@@ -14,7 +14,7 @@
 | Pattern | Why |
 |---|---|
 | `backend/.env` | Contains the Gemini API key |
-| `backend/*.db`, `backend/filaha.db` | Local SQLite database |
+| `backend/*.db`, `backend/ziraia.db` | Local SQLite database |
 | `backend/.venv/` | Python virtualenv |
 | `backend/__pycache__/`, `**/__pycache__/` | Python bytecode |
 | `backend/.pytest_cache/` | Test runner cache |
@@ -36,7 +36,7 @@ Run these in order BEFORE issuing `git commit`:
 git status
 
 # 2. Sanity-check that gitignore is doing its job
-git check-ignore backend/.env backend/filaha.db frontend/node_modules frontend/dist
+git check-ignore backend/.env backend/ziraia.db frontend/node_modules frontend/dist
 # Each of these should print its path. If any prints nothing, .gitignore is misconfigured.
 
 # 3. Scan staged diff for secrets

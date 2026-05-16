@@ -104,4 +104,4 @@ If any of those break, revert the change.
 
 ## Background: why this matters more than anything else
 
-Filaha AI's differentiator is _the AI talks to farmers in their own dialect_. Every other agri-tech demo has a dashboard. None of them have natural Darija. This skill protects the one thing competitors can't easily copy.
+ZiraIA's differentiator is _the AI talks to farmers in their own dialect_. Every other agri-tech demo has a dashboard. None of them have natural Darija. This skill protects the one thing competitors can't easily copy.

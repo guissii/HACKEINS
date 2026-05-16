@@ -1,4 +1,4 @@
-# Skill: Filaha AI Design System
+# Skill: ZiraIA Design System
 
 **Purpose:** Visual + UX language reference for any AI assistant or human working on the frontend.
 
@@ -24,21 +24,21 @@
 
 ## Color palette
 
-Defined in `frontend/tailwind.config.js` under `theme.extend.colors.filaha`:
+Defined in `frontend/tailwind.config.js` under `theme.extend.colors.ziraia`:
 
 | Token | Hex | Use |
 |---|---|---|
-| `filaha-green` | `#2d8a4f` | Primary brand. Logo, headers, primary buttons |
-| `filaha-earth` | `#a87d4a` | Secondary accents. Sparingly. |
-| `filaha-sky` | `#3b82f6` | Information / neutral data |
-| `filaha-dry` | `#dc2626` | IRRIGATE state, urgent alerts |
-| `filaha-wet` | `#0284c7` | Water, moisture, "wet" data |
-| `filaha-wait` | `#f59e0b` | WAIT state, frost warnings |
+| `ziraia-green` | `#2d8a4f` | Primary brand. Logo, headers, primary buttons |
+| `ziraia-earth` | `#a87d4a` | Secondary accents. Sparingly. |
+| `ziraia-sky` | `#3b82f6` | Information / neutral data |
+| `ziraia-dry` | `#dc2626` | IRRIGATE state, urgent alerts |
+| `ziraia-wet` | `#0284c7` | Water, moisture, "wet" data |
+| `ziraia-wait` | `#f59e0b` | WAIT state, frost warnings |
 
 Decision color mapping (must stay consistent):
-- **IRRIGATE** → red (`filaha-dry` / `red-600`)
-- **WAIT** → amber (`filaha-wait` / `amber-500`)
-- **SKIP** → green (`filaha-green` / `green-600`)
+- **IRRIGATE** → red (`ziraia-dry` / `red-600`)
+- **WAIT** → amber (`ziraia-wait` / `amber-500`)
+- **SKIP** → green (`ziraia-green` / `green-600`)
 
 Don't introduce new palette colors without updating `tailwind.config.js` — keep the palette tight.
 
@@ -94,13 +94,13 @@ When adding a new component, match these conventions before inventing new ones.
 
 `components/WhatsAppPanel.jsx` has its own visual contract because it's the demo's hero element:
 
-- **Header:** WhatsApp green (`bg-[#075E54]`) with white text. Avatar circle on the left, "Filaha AI" + farmer name. Source badge ("Gemini live" or "Demo mode") in the top-right corner.
+- **Header:** WhatsApp green (`bg-[#075E54]`) with white text. Avatar circle on the left, "ZiraIA" + farmer name. Source badge ("Gemini live" or "Demo mode") in the top-right corner.
 - **Chat background:** `bg-[#ECE5DD]` — the actual WhatsApp cream color
 - **Incoming bubbles (AI):** white background, left-aligned, slight shadow
 - **Outgoing bubbles (farmer):** `bg-[#DCF8C6]` (WhatsApp light green), right-aligned, slight shadow
 - **Bubble shape:** `rounded-2xl px-3 py-2 text-sm` — never sharp corners
 - **Arabic text inside bubbles:** wrap in `<div className="arabic whitespace-pre-wrap">` — RTL + correct font
-- **Input area:** white bg, rounded-full input, `bg-filaha-green` send button
+- **Input area:** white bg, rounded-full input, `bg-ziraia-green` send button
 
 Things judges will look for and you should make crisper:
 - Typing indicator (3 animated dots) while waiting for Gemini
@@ -111,7 +111,7 @@ Things judges will look for and you should make crisper:
 Things to never break:
 - Don't render Arabic text in left-to-right direction
 - Don't lose the "Gemini live" / "Demo mode" badge — judges want to know the AI is actually wired up
-- Don't replace the WhatsApp color identity with Filaha brand colors. The whole point of the panel is "this looks like real WhatsApp"
+- Don't replace the WhatsApp color identity with ZiraIA brand colors. The whole point of the panel is "this looks like real WhatsApp"
 
 ---
 

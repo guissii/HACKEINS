@@ -12,7 +12,7 @@ import { createContext, useContext, useState, useEffect, useCallback } from "rea
 
 const STRINGS = {
   // Header
-  "app.name":                  { en: "Filaha AI",                                ar: "فلاحة AI" },
+  "app.name":                  { en: "ZiraIA",                                ar: "ZiraIA" },
   "app.tagline":               { en: "Irrigation intelligence for Moroccan farmers", ar: "ذكاء السقي لفلاحة المغرب" },
   "app.event":                 { en: "Hack AI · Rural World 2026",               ar: "Hack AI · العالم القروي 2026" },
   "lang.toggle":               { en: "العربية",                                  ar: "English" },
@@ -85,11 +85,11 @@ const LangContext = createContext({ lang: "en", setLang: () => {}, t: (k) => k }
 
 export function LangProvider({ children }) {
   const [lang, setLangState] = useState(() => {
-    try { return localStorage.getItem("filaha.lang") || "en"; } catch { return "en"; }
+    try { return localStorage.getItem("ziraia.lang") || "en"; } catch { return "en"; }
   });
   const setLang = useCallback((l) => {
     setLangState(l);
-    try { localStorage.setItem("filaha.lang", l); } catch {}
+    try { localStorage.setItem("ziraia.lang", l); } catch {}
   }, []);
   useEffect(() => {
     document.documentElement.lang = lang;

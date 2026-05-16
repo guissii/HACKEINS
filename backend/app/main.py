@@ -1,4 +1,4 @@
-"""Filaha AI — FastAPI entrypoint."""
+"""ZiraIA — FastAPI entrypoint."""
 from __future__ import annotations
 
 from contextlib import asynccontextmanager
@@ -30,7 +30,7 @@ async def lifespan(app: FastAPI):
     yield
 
 
-app = FastAPI(title="Filaha AI", version="0.1.0", lifespan=lifespan)
+app = FastAPI(title="ZiraIA", version="0.1.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,

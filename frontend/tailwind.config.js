@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        filaha: {
+        ziraia: {
           green: "#2d8a4f",
           earth: "#a87d4a",
           sky: "#3b82f6",
