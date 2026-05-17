@@ -3,7 +3,9 @@
 const BASE = import.meta.env.VITE_API_URL || "/api";
 
 async function get(path) {
-  const r = await fetch(`${BASE}${path}`);
+  const r = await fetch(`${BASE}${path}`, {
+    headers: { "Bypass-Tunnel-Reminder": "true" }
+  });
   if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
   return r.json();
 }
@@ -11,7 +13,10 @@ async function get(path) {
 async function post(path, body) {
   const r = await fetch(`${BASE}${path}`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { 
+      "Content-Type": "application/json",
+      "Bypass-Tunnel-Reminder": "true"
+    },
     body: JSON.stringify(body),
   });
   if (!r.ok) throw new Error(`${r.status} ${r.statusText}`);
