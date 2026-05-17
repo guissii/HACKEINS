@@ -3,6 +3,8 @@
 > AI-powered irrigation intelligence for Moroccan farmers.
 > Free satellite + weather data → deterministic decision engine → Gemini explains it in Darija → reaches the farmer on WhatsApp or a cooperative dashboard.
 
+Complete project document: [ZIRAIA_PROJECT_DOCUMENT.md](ZIRAIA_PROJECT_DOCUMENT.md)
+
 **Hack AI · Rural World 2026**
 
 ---
@@ -37,53 +39,34 @@ The farmer can reply at any time — ask a question, correct the AI, or share ne
 ## How it works
 
 ```
-┌──────────────────────────────────────────────────────┐
-│  Free public data (no licenses, no hardware)         │
-│                                                      │
-│   Open-Meteo API           NASA POWER / Future GEE   │
-│   (live weather)           (satellite KPIs)          │
-└──────────────┬──────────────────────┬────────────────┘
-               │                      │
-               ▼                      ▼
-┌──────────────────────────────────────────────────────┐
-│  Deterministic decision engine (pure Python)         │
-│                                                      │
-│   • Hargreaves ET₀ from temperature + radiation      │
-│   • Crop water need = ET₀ × Kc (per crop, per stage) │
-│   • Threshold-based decision: IRRIGATE / WAIT / SKIP │
-│   • Frost / drought / crop-stress alerts             │
-│                                                      │
-│  No AI here. Fully unit-tested. Auditable.           │
-└──────────────────────┬───────────────────────────────┘
-                       │
-                       ▼
-┌──────────────────────────────────────────────────────┐
-│  AI lives only at the human interface (Gemini 2.5)   │
-│                                                      │
-│   1. Explainer  → turns the decision + numbers       │
-│                   into a warm Darija WhatsApp message │
-│                                                      │
-│   2. Q&A         → answers farmer follow-up questions │
-│                   matching the script they used      │
-│                                                      │
-│   3. Intent parser → parses farmer corrections        │
-│                   ("soil is actually wet") into       │
-│                   structured overrides                │
-│                                                      │
-│  Three Gemini calls total. Each has a templated      │
-│  Darija fallback if the API is down.                 │
-└──────────────────────┬───────────────────────────────┘
-                       │
-                       ▼
-┌──────────────────────────────────────────────────────┐
-│  Output                                              │
-│                                                      │
-│   • WhatsApp (planned via Twilio — currently         │
-│     simulated in the dashboard for the demo)         │
-│   • Web dashboard (React) with map, KPIs, alerts,    │
-│     trend chart, WhatsApp-style chat                 │
-│   • Bilingual UI (English / Arabic with full RTL)    │
-└──────────────────────────────────────────────────────┘
+NASA + ESA Satellites
+(soil moisture / NDVI / surface temperature)
+              +
+Open-Meteo API
+(rain probability / temperature / wind — 72h forecast)
+              +
+NASA POWER API
+(solar radiation → ET₀ calculation)
+              ↓
+    ─────────────────────────────
+    DECISION ENGINE (pure Python)
+    Scientific rules + agricultural formulas
+    ET₀ × crop water coefficient
+    Soil moisture thresholds per crop
+    → IRRIGATE / WAIT / SKIP
+    → exact minutes + liters
+    → alerts
+    ─────────────────────────────
+              ↓
+    GEMINI 2.5 FLASH (AI layer)
+    3 specialized agents:
+    [1] Explainer → Darija WhatsApp message
+    [2] Q&A → answers farmer questions
+    [3] Intent Parser → understands farmer corrections
+              ↓
+    WhatsApp message → farmer
+              ↓
+    Farmer replies → Gemini Q&A → WhatsApp response
 ```
 
 ### Architecture principles

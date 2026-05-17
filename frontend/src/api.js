@@ -22,6 +22,7 @@ export const api = {
   analyze: (id) => get(`/farms/${id}/analyze`),
   history: (id) => get(`/farms/${id}/history`),
   ask: (id, question) => post(`/farms/${id}/ask`, { question }),
+  aiStatus: () => get("/ai-status"),
   // Human-in-the-loop:
   correction: (id, text) => post(`/farms/${id}/correction`, { text }),
   feedback: (id, vote, messageExcerpt) =>

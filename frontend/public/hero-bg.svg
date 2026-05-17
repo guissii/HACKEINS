@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <linearGradient id="g0" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8fafc"/>
+      <stop offset="0.55" stop-color="#eef2f7"/>
+      <stop offset="1" stop-color="#e2e8f0"/>
+    </linearGradient>
+    <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2d8a4f" stop-opacity="0.20"/>
+      <stop offset="1" stop-color="#2d8a4f" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="g2" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0f172a" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#0f172a" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="soft" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="18"/>
+    </filter>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#g0)"/>
+  <g opacity="0.9">
+    <path d="M-40 780C220 660 460 640 720 700C950 754 1150 742 1400 660C1630 584 1810 566 1960 600L1960 1120L-40 1120Z" fill="url(#g1)"/>
+    <path d="M-60 860C230 740 510 720 780 790C1010 848 1230 836 1500 750C1730 674 1890 650 1980 676" fill="none" stroke="#0f172a" stroke-opacity="0.08" stroke-width="3"/>
+    <path d="M-60 920C260 800 540 788 820 856C1060 914 1280 902 1560 820C1780 756 1900 732 1980 750" fill="none" stroke="#0f172a" stroke-opacity="0.06" stroke-width="3"/>
+  </g>
+  <g filter="url(#soft)" opacity="0.75">
+    <circle cx="1560" cy="250" r="260" fill="url(#g2)"/>
+    <circle cx="380" cy="260" r="220" fill="url(#g2)"/>
+  </g>
+  <g opacity="0.12">
+    <path d="M80 80H1840V82H80Z" fill="#0f172a"/>
+    <path d="M80 130H1840V132H80Z" fill="#0f172a"/>
+    <path d="M80 180H1840V182H80Z" fill="#0f172a"/>
+  </g>
+</svg>

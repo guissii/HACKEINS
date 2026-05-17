@@ -14,12 +14,31 @@ from app.services import weather_live
 
 logger = logging.getLogger(__name__)
 
-DATA_FILE = Path(__file__).resolve().parents[3] / "data" / "sample_farms.json"
+_HERE = Path(__file__).resolve()
+_DATA_FILE_CANDIDATES = [
+    _HERE.parents[3] / "data" / "sample_farms.json",
+    _HERE.parents[2] / "data" / "sample_farms.json",
+]
+
+
+def _resolve_data_file() -> Path | None:
+    for p in _DATA_FILE_CANDIDATES:
+        if p.exists():
+            return p
+    return None
 
 
 def _load_mock() -> list[dict[str, Any]]:
-    with open(DATA_FILE) as f:
-        return json.load(f)
+    path = _resolve_data_file()
+    if not path:
+        logger.error("sample_farms.json not found in expected locations")
+        return []
+    try:
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+    except Exception as e:
+        logger.error("Failed to load sample farms from %s: %s", path, e)
+        return []
 
 
 def list_farms() -> list[dict[str, Any]]:

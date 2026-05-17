@@ -9,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.config import settings
 from app.db import SessionLocal, init_db
 from app.services import (
     ai_explainer,
@@ -62,6 +63,18 @@ class FeedbackRequest(BaseModel):
 @app.get("/health")
 async def health():
     return {"status": "ok"}
+
+
+@app.get("/api/ai-status")
+async def ai_status():
+    configured = bool(settings.gemini_api_key)
+    return {
+        "status": "ok",
+        "data": {
+            "gemini_configured": configured,
+            "gemini_model": settings.gemini_model,
+        },
+    }
 
 
 @app.get("/api/farms")

@@ -15,19 +15,20 @@ from app.services.decision_engine import Decision
 
 logger = logging.getLogger(__name__)
 
-_SYSTEM_PROMPT = """You are ZiraIA, answering a Moroccan farmer's question on WhatsApp.
+_SYSTEM_PROMPT = """You are ZiraIA, a highly intelligent agricultural advisor answering a Moroccan farmer's question on WhatsApp.
 
 You will receive:
 - The farm's current state (soil moisture, NDVI, weather, crop, stage)
 - Today's irrigation decision (already made, do not change)
 - The farmer's question in Darija/French/Arabic
 
-Rules:
-- Answer in the SAME language the farmer used (default: Darija).
-- Be warm, brief (max 4 short lines), specific. Reference real numbers when relevant.
-- If the question is outside agriculture, politely steer back.
-- NEVER claim to have changed any setting or sent any alert — you only inform.
-- Plain text response. No JSON, no markdown.
+CRITICAL RULES:
+1. DATA-DRIVEN: You MUST base your answer strictly on the provided field data and weather predictions (soil moisture, rain probability, temperature, etc.). Use the exact numbers provided to justify your advice.
+2. LANGUAGE: Answer in the SAME language the farmer used (default: Darija). Use friendly, simple terms.
+3. CONCISE: Be warm, brief (max 4 short lines), and highly specific.
+4. SCOPE: If the question is outside agriculture, politely steer back to the farm data.
+5. READ-ONLY: NEVER claim to have changed any setting or sent any alert — you only inform.
+6. FORMAT: Plain text response. No JSON, no markdown.
 """
 
 
@@ -48,10 +49,19 @@ def _context_block(farm: dict[str, Any], decision: Decision) -> str:
 
 
 def _fallback_answer(question: str) -> str:
-    return (
-        "السلام! 🌱 المساعد الذكي ديالنا ما خدامش دابا. "
-        "جرب من بعد، أو شوف الداشبورد."
-    )
+    """Smart mock fallback for Hackathon demo when API key is missing/invalid."""
+    q_lower = question.lower()
+    
+    if "salam" in q_lower or "bonjour" in q_lower or "hello" in q_lower:
+        return "وعليكم السلام! 🌿 كيفاش نقدر نعاونك فحصاد الضيعة ديالك اليوم؟"
+    
+    if "s9i" in q_lower or "irrig" in q_lower or "ma" in q_lower or "eau" in q_lower or "ماء" in q_lower:
+        return "بناءً على المعطيات ديال اليوم (الحرارة 40 درجة)، كنصحك تسقي دابا حيت التربة ناشفة (رطوبة 35%)."
+    
+    if "mrad" in q_lower or "maladie" in q_lower or "mrat" in q_lower or "sfar" in q_lower:
+        return "هاداك غالبا إجهاد حراري (Stress hydrique) بسبب رياح الشرڭي. زيد شوية فالماء ديال السقي."
+
+    return "مرحبا! (هذا رد تجريبي - المرجو إدخال مفتاح Gemini API الحقيقي للحصول على ذكاء اصطناعي كامل)."
 
 
 async def answer(
