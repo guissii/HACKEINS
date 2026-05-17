@@ -26,11 +26,24 @@ export default function NotificationBell({ farms = [], analyses = {}, onSelectFa
     if (analysis.decision.alerts) {
       for (const alert of analysis.decision.alerts) {
         if (alert.severity === "high" || alert.severity === "medium") {
+          let msg = alert.message;
+          if (lang === "ar") {
+            if (alert.type === "frost") msg = "🥶 خطر الصقيع (الجريحة) الليلة!";
+            else if (alert.type === "heavy_rain") msg = "🌧️ أمطار غزيرة متوقعة، يُنصح بتأجيل السقي";
+            else if (alert.type === "drought_stress") msg = "⚠️ انخفاض رطوبة التربة لـ 7 أيام متتالية";
+            else if (alert.type === "crop_stress") msg = "🥀 انخفاض في مؤشر الغطاء النباتي (NDVI)، المحصول تحت الإجهاد";
+          } else {
+            // Provide English fallback icons and clean text if needed
+            if (alert.type === "frost") msg = "🥶 Frost risk tonight!";
+            else if (alert.type === "heavy_rain") msg = "🌧️ Heavy rain expected, skip irrigation";
+            else if (alert.type === "drought_stress") msg = "⚠️ Soil moisture declining for 7 days";
+            else if (alert.type === "crop_stress") msg = "🥀 NDVI drop detected, crop under stress";
+          }
           notifications.push({
             farm,
             type: alert.type,
             severity: alert.severity,
-            message: alert.message
+            message: msg
           });
         }
       }
@@ -44,9 +57,19 @@ export default function NotificationBell({ farms = [], analyses = {}, onSelectFa
         notifications.push({ farm, type: "extreme_heat", severity: "high", message: lang === "ar" ? "تنبيه رياح الشرقي: جفاف شديد، تبخر سريع." : "Chergui Wind Alert: Extremely dry and hot." });
       }
       if (weather.rain_prob_24h === 0 && weather.temp_max_c >= 30 && farm.region === "Souss-Massa") {
-        notifications.push({ farm, type: "critical_humidity", severity: "medium", message: lang === "ar" ? "خطر الإجهاد المائي (Souss-Massa)" : "Hydric Stress Risk (Souss-Massa)" });
+        notifications.push({ farm, type: "critical_humidity", severity: "medium", message: lang === "ar" ? "خطر الإجهاد المائي (سوس ماسة)" : "Hydric Stress Risk (Souss-Massa)" });
       }
     }
+  }
+
+  // ADD A FORCED DEMO ALERT FOR PRESENTATION (ALWAYS SHOWS IN RED)
+  if (farms.length > 0) {
+    notifications.push({
+      farm: farms[0],
+      type: "demo_critical",
+      severity: "high",
+      message: lang === "ar" ? "🚨 عاصفة رعدية قوية متوقعة الليلة. يُنصح بتأجيل السقي لتجنب غمر المحاصيل." : "🚨 Severe thunderstorm expected tonight. Delay irrigation to prevent crop flooding."
+    });
   }
   
   // Deduplicate and sort by severity

@@ -106,7 +106,7 @@ export default function KPICards({ decision }) {
         title={t("kpi.water_level") || "Water Level"}
         value={sm > 20 ? "75" : "30"}
         unit="cm"
-        sub="Reserve"
+        sub={lang === "ar" ? "الاحتياطي المائي" : "Reserve"}
         highlightColor="text-sky-600"
       />
       {/* 3. Crop Health (NDVI) */}
@@ -131,8 +131,8 @@ export default function KPICards({ decision }) {
       <Card
         delay={4}
         title={lang === "ar" ? "تحليل التربة (NPK)" : "Soil Analysis (NPK)"}
-        value="Sandy Loam"
-        sub="pH: 6.5 | N: Low, P: OK, K: OK"
+        value={lang === "ar" ? "تربة رملية" : "Sandy Loam"}
+        sub={lang === "ar" ? "الرقم الهيدروجيني: 6.5 | النيتروجين: منخفض" : "pH: 6.5 | N: Low, P: OK, K: OK"}
         highlightColor="text-orange-600"
         interpretation={{ tier: "ok", label: { en: "Needs Nitrogen", ar: "يحتاج آزوت" } }}
         lang={lang}
@@ -145,14 +145,14 @@ export default function KPICards({ decision }) {
         title={t("kpi.drought_pred") || "Drought Prediction"}
         value={rainProb < 20 ? (lang === "ar" ? "خطر عالي" : "High Risk") : (lang === "ar" ? "خطر منخفض" : "Low Risk")}
         highlightColor={rainProb < 20 ? "text-red-600" : "text-emerald-600"}
-        sub={`Rain prob: ${rainProb}%`}
+        sub={lang === "ar" ? `احتمال المطر: ${rainProb}%` : `Rain prob: ${rainProb}%`}
       />
       {/* 7. Estimated Yield */}
       <Card
         delay={6}
         title={t("kpi.yield") || "Estimated Yield"}
         value="42"
-        unit="Tons/ha"
+        unit={lang === "ar" ? "طن/هكتار" : "Tons/ha"}
         sub={lang === "ar" ? "بناءً على النمو الحالي" : "Based on current growth"}
         highlightColor="text-emerald-600"
       />
@@ -160,7 +160,7 @@ export default function KPICards({ decision }) {
       <Card
         delay={7}
         title={t("kpi.harvest_date") || "Harvest Date"}
-        value="Oct 15"
+        value={lang === "ar" ? "15 أكتوبر" : "Oct 15"}
         sub={lang === "ar" ? "الفترة المثلى" : "Optimal window"}
         highlightColor="text-indigo-600"
       />
@@ -177,8 +177,8 @@ export default function KPICards({ decision }) {
       <Card
         delay={9}
         title={lang === "ar" ? "توصية السماد" : "Fertilizer Rec"}
-        value="Urea 46%"
-        unit="50 kg/ha"
+        value={lang === "ar" ? "يوريا 46%" : "Urea 46%"}
+        unit={lang === "ar" ? "50 كجم/هكتار" : "50 kg/ha"}
         sub={lang === "ar" ? "لتحسين نقص النيتروجين" : "To fix nitrogen deficiency"}
         highlightColor="text-sky-700"
       />

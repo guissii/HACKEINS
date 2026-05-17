@@ -42,7 +42,7 @@ export default function FarmList({ farms, analyses, selectedId, onSelect, onAddF
                   <div className="text-[11px] font-medium text-slate-500 truncate flex items-center gap-1.5">
                     <span className="truncate">{f.farmer_name}</span>
                     <span className="w-1 h-1 rounded-full bg-slate-300" />
-                    <span>{f.crop}</span>
+                    <span>{t(f.crop)}</span>
                     <span className="w-1 h-1 rounded-full bg-slate-300" />
                     <span className="font-bold">{f.area_hectares} {t("farm.area")}</span>
                   </div>

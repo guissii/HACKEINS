@@ -83,12 +83,7 @@ export default function DecisionWidget({ decision }) {
               </div>
             </div>
             
-            <div className="mt-4 relative z-10 flex gap-3">
-              <button className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white shadow-md hover:shadow-lg transition-all rounded-xl py-3 text-sm font-extrabold flex items-center justify-center gap-2">
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                {t("action.execute") || "EXECUTE ORDER"}
-              </button>
-            </div>
+
           </>
         )}
       </div>

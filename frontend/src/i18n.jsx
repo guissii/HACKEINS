@@ -46,6 +46,20 @@ const STRINGS = {
   // Farm header
   "farm.area":                 { en: "ha",                                       ar: "هكتار" },
 
+  // Data translations (Backend values)
+  "citrus":                    { en: "citrus",                                   ar: "حوامض (ليمون)" },
+  "tomato":                    { en: "tomato",                                   ar: "طماطم" },
+  "wheat":                     { en: "wheat",                                    ar: "قمح" },
+  "olive":                     { en: "olive",                                    ar: "زيتون" },
+  "barley":                    { en: "barley",                                   ar: "شعير" },
+  "argan":                     { en: "argan",                                    ar: "أركان" },
+  
+  "Souss-Massa":               { en: "Souss-Massa",                              ar: "سوس ماسة" },
+  "Beni Mellal":               { en: "Beni Mellal",                              ar: "بني ملال" },
+  "Fes-Meknes":                { en: "Fes-Meknes",                               ar: "فاس مكناس" },
+  "Marrakech-Safi":            { en: "Marrakech-Safi",                           ar: "مراكش آسفي" },
+  "Oriental":                  { en: "Oriental",                                 ar: "الشرق" },
+
   // Decision widget
   "decision.IRRIGATE":         { en: "IRRIGATE NOW",                             ar: "سقي دابا" },
   "decision.WAIT":             { en: "WAIT — RAIN COMING",                       ar: "تسنى — الشتا جاية" },

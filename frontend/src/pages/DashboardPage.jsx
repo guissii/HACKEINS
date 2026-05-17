@@ -105,10 +105,10 @@ export default function DashboardPage() {
 
         {activeFarm && (
           <section className="container-page pt-8 pb-8">
-            <SectionHeader
+              <SectionHeader
               icon=""
               title={activeFarm.parcel_name}
-              subtitle={`${activeFarm.farmer_name} · ${activeFarm.region} · ${activeFarm.area_hectares} ${t("farm.area")} · ${activeFarm.crop}`}
+              subtitle={`${activeFarm.farmer_name} · ${t(activeFarm.region)} · ${activeFarm.area_hectares} ${t("farm.area")} · ${t(activeFarm.crop)}`}
               right={
                 hasAnalysis && (
                   <div className="flex gap-2">
@@ -135,9 +135,9 @@ export default function DashboardPage() {
                   <div className="text-[10px] uppercase tracking-widest text-slate-500 font-extrabold mb-4">{t("dash.profile_title")}</div>
                   <div className="space-y-1">
                     <ProfileRow label={t("dash.profile_farmer")} value={selectedLocalFarm.farmer_name} />
-                    <ProfileRow label={t("dash.profile_country")} value={selectedLocalFarm.country} />
-                    <ProfileRow label={t("dash.profile_region")} value={selectedLocalFarm.region} />
-                    <ProfileRow label={t("dash.profile_crop")} value={selectedLocalFarm.crop} />
+                    <ProfileRow label={t("dash.profile_country")} value={t(selectedLocalFarm.country) || selectedLocalFarm.country} />
+                    <ProfileRow label={t("dash.profile_region")} value={t(selectedLocalFarm.region)} />
+                    <ProfileRow label={t("dash.profile_crop")} value={t(selectedLocalFarm.crop)} />
                     <ProfileRow label={t("dash.profile_area")} value={`${selectedLocalFarm.area_hectares} ${t("farm.area")}`} />
                   </div>
                 </div>
@@ -209,6 +209,51 @@ export default function DashboardPage() {
               ) : (
                 <>
                   <div className="mt-6 flex flex-col gap-6">
+                    
+                    {/* NEW: AI Decision Summary Section */}
+                    <div className="w-full bg-indigo-900 rounded-2xl p-6 shadow-lg text-white relative overflow-hidden group" dir={isAr ? "rtl" : "ltr"}>
+                      <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none transition-transform group-hover:scale-110 duration-700" />
+                      
+                      <div className="flex items-center gap-3 mb-5 relative z-10">
+                        <div className="p-2 bg-indigo-800 rounded-lg">
+                           <svg className="w-5 h-5 text-indigo-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+                        </div>
+                        <h3 className="font-black text-xl tracking-tight">{isAr ? "ملخص قرار الذكاء الاصطناعي" : "AI Decision Summary"}</h3>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 relative z-10 mb-5">
+                        <div className="bg-indigo-950/50 p-4 rounded-xl border border-indigo-800/50">
+                           <div className="text-indigo-300 text-[10px] uppercase font-bold mb-1 tracking-widest">{isAr ? "الحرارة" : "Temperature"}</div>
+                           <div className="text-2xl font-black" dir="ltr">{selectedFarm?.weather?.temp_c || 28}°C</div>
+                        </div>
+                        <div className="bg-indigo-950/50 p-4 rounded-xl border border-indigo-800/50">
+                           <div className="text-indigo-300 text-[10px] uppercase font-bold mb-1 tracking-widest">{isAr ? "مدة السقي" : "Irrigation Time"}</div>
+                           <div className="text-2xl font-black">{selectedAnalysis.decision?.irrigation_minutes || 0} <span className="text-sm text-indigo-300 font-bold">{isAr ? "دقيقة" : "min"}</span></div>
+                        </div>
+                        <div className="bg-indigo-950/50 p-4 rounded-xl border border-indigo-800/50">
+                           <div className="text-indigo-300 text-[10px] uppercase font-bold mb-1 tracking-widest">{isAr ? "الكمية" : "Quantity"}</div>
+                           <div className="text-2xl font-black" dir="ltr">{((selectedAnalysis.decision?.irrigation_liters || 0) / 1000).toFixed(1)} <span className="text-sm text-indigo-300 font-bold">m³</span></div>
+                        </div>
+                        <div className="bg-emerald-900/50 p-4 rounded-xl border border-emerald-700/50">
+                           <div className="text-emerald-300 text-[10px] uppercase font-bold mb-1 tracking-widest">{isAr ? "التوصية" : "Recommendation"}</div>
+                           <div className="text-lg font-black text-emerald-400 mt-1">{selectedAnalysis.decision?.action === "IRRIGATE" ? (isAr ? "سقي الآن" : "Irrigate Now") : (isAr ? "تأجيل السقي" : "Skip Irrigation")}</div>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-indigo-800/30 p-5 rounded-xl border border-indigo-700/30 relative z-10">
+                         <div className="flex items-center gap-2 mb-2">
+                           <svg className="w-4 h-4 text-indigo-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12h4l3-9 5 18 3-9h5"/></svg>
+                           <div className="text-indigo-200 text-[11px] uppercase font-bold tracking-widest">{isAr ? "التفسير الذكي" : "Smart Explanation"}</div>
+                         </div>
+                         <div className="text-[15px] font-medium leading-relaxed text-indigo-50 whitespace-pre-wrap">
+                            {selectedAnalysis.ai?.darija_message || (isAr 
+                              ? `على حساب الحرارة ديال اليوم (${selectedFarm?.weather?.temp_c || 28}°C) ورطوبة الأرض لي نزلات لـ ${selectedFarm?.soil?.moisture_percent || 38}%، الذكاء الاصطناعي كينصحك تسقي بـ ${((selectedAnalysis.decision?.irrigation_liters || 0) / 1000).toFixed(1)} متر مكعب لمدة ${selectedAnalysis.decision?.irrigation_minutes || 0} دقيقة. هادشي غيعوض الما لي تبخر (ET0) وغيحمي الغلة بلا ما نضيعو قطرة.`
+                              : `Based on the current temperature of ${selectedFarm?.weather?.temp_c || 28}°C and a drop in soil moisture to ${selectedFarm?.soil?.moisture_percent || 38}%, we recommend pumping ${((selectedAnalysis.decision?.irrigation_liters || 0) / 1000).toFixed(1)} m³ of water for ${selectedAnalysis.decision?.irrigation_minutes || 0} minutes. This compensates for daily evaporation (ET0) and prevents crop water stress without wasting resources.`
+                            )}
+                         </div>
+                      </div>
+                    </div>
+
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                       <DecisionWidget decision={selectedAnalysis.decision} />
                       <WaterSavings decision={selectedAnalysis.decision} farm={selectedFarm} />
